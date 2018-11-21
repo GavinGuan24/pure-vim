@@ -41,9 +41,21 @@ chmod 755 build_image.sh run_container.sh
 ./build_image.sh 0.1.0
 # 这里的版本号请与上一个保持一致
 ./run_container.sh 0.1.0
-# 进入 docker 中的 pure-vim 开始你的编辑或定制工作(这里的版本号请与上一个保持一致)
+# 进入 docker 中的容器 pure-vim 开始你的编辑或定制工作(这里的版本号请与上一个保持一致)
 docker exec -it purevim_0.1.0 /bin/sh
 ```
+
+在容器中执行
+
+```sh
+# 默认用户是root, 这里进入的是/root/
+cd
+# 打开vim
+vim
+:PlugInstall
+# 提示插件安装完成后, 关闭vim, 重新进入即可开始你的表演
+```
+
 
 ## 已完成的整合
 
