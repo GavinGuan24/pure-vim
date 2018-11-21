@@ -1,0 +1,36 @@
+#! /bin/sh
+
+w_error=0
+
+w_path=$1
+# 无工作路径
+if [[ "$w_path" == '' ]]; then
+    w_error=1
+fi
+
+w_file_type=$2
+# 无文件类型
+if [[ "$w_file_type" == '' ]]; then
+    w_error=2
+fi
+
+w_substring_position=$((${#w_path}+${#w_file_type}+1))
+w_args=$*
+w_key=${w_args:$(($w_substring_position+1))}
+
+# 无关键字
+if [[ "$w_key" == '' ]]; then
+    w_error=3
+fi
+
+echo 'search path:'$w_path', file type:'$w_file_type', key:'$w_key
+if [[ "$w_error" != '0' ]]; then
+	echo 'error: '$w_error
+else
+	echo finded
+	find $w_path -type f -name $w_file_type | xargs grep -sin $w_key
+fi
+
+exit 0
+
+

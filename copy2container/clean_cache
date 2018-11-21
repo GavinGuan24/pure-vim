@@ -1,0 +1,9 @@
+#! /bin/sh
+
+# 清除 apk 的源索引缓存
+rm -rf /var/cache/apk/*
+# 清除 man 手册, alpine 默认没有man命令, 该目录是无用的
+rm -rf /usr/share/man/*
+
+exit 0
+
