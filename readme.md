@@ -7,7 +7,7 @@ pure-vim 是一个 docker 化的 vim.
 
 我想要的 pure-vim 是一个类IDE, 不具有一个完善的IDE的所有功能, 而是有着IDE最基本的功能的编辑器.
 为选定一个技术栈之后定制 pure-vim 提供方便.
-所以 ta 不会像 [spacevim](https://spacevim.org/) 一样, 将数个流行编程语言的各种IDE集成功能都包含进去.
+所以它不会像 [spacevim](https://spacevim.org/) 一样, 将数个流行编程语言的各种IDE集成功能都包含进去.
 
 ## 版本
 
@@ -19,6 +19,32 @@ pure-vim 是一个 docker 化的 vim.
 
 0.0.1
 
+## 使用它
+
+#### 1. 运行 pure-vim 在容器中
+
+执行
+
+```sh
+git clone git@github.com:GavinGuan24/pure-vim.git
+cd pure-vim
+vim run_container.sh
+```
+
+修改run_container中的 **target_folder** 为你喜欢的文件夹路径(执行脚本时, 脚本会为其加上你定制的版本号作为后缀)
+
+执行
+
+```sh
+chmod 755 build_image.sh run_container.sh
+# 0.1.0 可以被替换为你喜欢的任何版本名. 由于我编写 pure-vim 的初衷, 所以保留了必填参数, 版本.
+./build_image.sh 0.1.0
+# 这里的版本号请与上一个保持一致
+./run_container.sh 0.1.0
+# 进入 docker 中的 pure-vim 开始你的编辑或定制工作(这里的版本号请与上一个保持一致)
+docker exec -it purevim_0.1.0 /bin/sh
+```
+
 ## 已完成的整合
 
 - vim-plug: 插件管理工具
@@ -29,8 +55,8 @@ pure-vim 是一个 docker 化的 vim.
 - vim-terminal: 基于 vim split 的终端
 - ctrlp: 模糊搜索文件等
 
-## 试用中的插件
+## 试用中或尝试整合的插件
 
-vim-airline
-syntastic
-tagbar
+- vim-airline
+- syntastic
+- tagbar

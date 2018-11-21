@@ -1,6 +1,6 @@
 FROM alpine
 
-COPY ./copy2container/ /usr/local/bin
+COPY ./usr_local_bin/ /usr/local/bin
 COPY ./vimrc /root/.vimrc
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
