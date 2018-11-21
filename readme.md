@@ -1,7 +1,7 @@
 # pure-vim
 
 pure-vim 是一个 docker 化的 vim.
-"习惯至上", "核心而小巧" 为原则
+"docker化", "习惯至上", "核心而小巧" 为原则
 
 ## 我想要的 pure-vim
 
@@ -32,6 +32,7 @@ vim run_container.sh
 ```
 
 修改run_container中的 **target_folder** 为你喜欢的文件夹路径(执行脚本时, 脚本会为其加上你定制的版本号作为后缀)
+target_folder: pure-vim 容器运行时, 宿主机挂载到容器中的文件夹路径
 
 执行
 
