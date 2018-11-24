@@ -3,12 +3,20 @@
 w_error=0
 
 w_path=$1
+# 使用 "-" 表示默认路径 "."
+if [[ "$w_path" == "-" ]]; then
+    w_path="."
+fi
 # 无工作路径
 if [[ "$w_path" == '' ]]; then
     w_error=1
 fi
 
 w_file_type=$2
+# 使用 "-" 表示默认文件类型 "*.*"
+if [[ "$w_file_type" == "-" ]]; then
+    w_file_type="*.*"
+fi
 # 无文件类型
 if [[ "$w_file_type" == '' ]]; then
     w_error=2
