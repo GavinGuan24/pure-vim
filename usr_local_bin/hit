@@ -1,22 +1,17 @@
 #! /bin/sh
 
+#usage: hit <folder_path> <file_type> <snippet>
+#e.g.   hit .             *.java      "String()"
+
 w_error=0
 
 w_path=$1
-# 使用 "-" 表示默认路径 "."
-if [[ "$w_path" == "-" ]]; then
-    w_path="."
-fi
 # 无工作路径
 if [[ "$w_path" == '' ]]; then
     w_error=1
 fi
 
 w_file_type=$2
-# 使用 "-" 表示默认文件类型 "*.*"
-if [[ "$w_file_type" == "-" ]]; then
-    w_file_type="*.*"
-fi
 # 无文件类型
 if [[ "$w_file_type" == '' ]]; then
     w_error=2
@@ -34,11 +29,10 @@ fi
 echo 'search path:'$w_path', file type:'$w_file_type', key:'$w_key
 if [[ "$w_error" != '0' ]]; then
 	echo 'error: '$w_error
+	echo "usage: hit <folder_path> <file_type> <snippet>\ne.g.   hit .             *.java      \"public static void main(String[] args) {\""
 else
-	echo finded
-	find $w_path -type f -name $w_file_type | xargs grep -sin $w_key
+	echo hitted
+	find $w_path -type f -name $w_file_type | xargs grep -sinF "$w_key" | awk -F ':' '{print $1"("$2")>====>"substr($0, length($1)+length($2)+7)}'
 fi
 
 exit 0
-
-
