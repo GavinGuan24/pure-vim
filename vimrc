@@ -7,7 +7,9 @@
 "========= vim necessary setting - vim 的必要设置
 set nocompatible    "禁用vim对vi的兼容模式
 set encoding=utf-8  "使用UTF-8
-let mapleader=","   "leader键, 避免快捷键冲突
+let mapleader = ","   "leader键, 避免快捷键冲突
+set t_Co=256        "开启256彩色
+
 
 "========= visible item - 可视组件 
 set showmode        "显示当前vim模式
@@ -32,44 +34,75 @@ set tabstop=4       "显示tab的空白符个数
 set softtabstop=4   "键入tab时, 空白符个数
 set shiftwidth=4    "级别间的tab, 空白符个数差
 set expandtab       "使用空格替代tab
-"set autoindent      "新行随上一行自动缩进
-set smartindent
+set smartindent     "自动缩进
 set mouse=a         "所有模式下均开启鼠标操作
 
 
 "========= map - 基础快捷键
-"可参考
-"https://blog.csdn.net/lym152898/article/details/52171494
-"https://www.jianshu.com/p/8ae25a680ed7
-"alt + z 停用鼠标操作
+
+"alt + z 停用鼠标操作, 同时停用行号
 nmap Ω :set mouse=<CR>:set nonu<CR>
-"alt + m 启用鼠标操作
+
+"alt + m 启用鼠标操作, 同时开启行号
 nmap µ :set mouse=a<CR>:set nu<CR>
+
 "alt + s 快速保存当前buffer
 imap ß <Esc>:w<CR>i<Right>
 nmap ß :w<CR>
-"alt + w 关闭当前tab页
+
+"alt + w 关闭当前 vim tab 页 - 不推荐使用, 请使用 airline 替代
 imap ∑ ß<Esc>:tabc<CR>
-nmap ∑ ß:tabc<CR> 
+nmap ∑ ß:tabc<CR>
+
+"alt + c 使用鼠标的复制, alt + v 不依赖鼠标的粘贴, 注意 p/P会粘贴在光标右/左
+vnoremap ç y
+inoremap √ <Esc>pi<Right>
+nnoremap √ P  
+
+
+" 快速编辑我的 vimrc
+nmap <Leader>,s :e $MYVIMRC<CR>
 "========= beta - 试用功能
 
 "========================================================
 "===================== vim-plug 管理器 ==================
 "========================================================
 call plug#begin('~/.vim/plugged')
-"NERDTree : 树目录, 树形结构的文件(夹)浏览窗
+
+"NERDTree
+"   树目录, 树形结构的文件(夹)浏览窗
 Plug 'https://github.com/scrooloose/nerdtree.git'
-"NERDTree tab : 统一 vim tab页的树目录, 使NERDTree更像一个独立窗口
+
+"NERDTree tab
+"   统一 vim tab页的树目录, 使NERDTree更像一个独立窗口(不建议重度使用该插
+"   件的功能, vim tab 的效率明显低于 vim buffer. 推荐习惯 airline 的 tabline
+"   功能
 Plug 'jistr/vim-nerdtree-tabs'
-"NERDTree git : 提供有限的文件git状态展示功能
+
+"NERDTree git
+"   提供有限的文件git状态展示功能
 Plug 'Xuyuanp/nerdtree-git-plugin'
-"vim terminal : 中快速开启一个 vim split 来使用 terminal
+
+"vim terminal
+"   在 vim 中快速开启一个 vim split 来使用 terminal(该插件功能有限,
+"   不推荐重度使用)
 Plug 'PangPangPangPangPang/vim-terminal'
-"CtrlP : 搜索vim中的一切file, buffer, mru, tag, ...
+
+"CtrlP
+"   按文件路径, 文件名搜索
 Plug 'ctrlpvim/ctrlp.vim'
+
+"airline
+"   提供 status/tab line, 同时支持多个插件,例如: fugitive
+Plug 'vim-airline/vim-airline'
+"airline theme
+"   提供多种 airline 主题配色, 如不喜欢 airline 默认集成的 dark 主题,
+"   可使用该插件更换
+"Plug 'vim-airline/vim-airline-themes'
+
 "vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件需要最后一个加载
 Plug 'ryanoasis/vim-devicons'
-
+Plug 'tpope/vim-fugitive'
 call plug#end()
 
 "==================================
@@ -88,31 +121,33 @@ let g:NERDTreeDirArrowCollapsible = '▼'
 
 
 "************************ NERDTree tabs
-"跟随vim启动
-let g:nerdtree_tabs_open_on_console_startup=1
+"跟随vim启动 NerdTree
+let g:nerdtree_tabs_open_on_console_startup = 1
+"当仅剩 NerdTree 窗口时, 自动关闭(最常见的情形就是没有活动的buffer时, 自动关闭)
+let g:nerdtree_tabs_autoclose = 1
 "=== 快捷键
 "快速开关 NERDTree
 nmap <Leader>1 :NERDTreeTabsToggle<CR>
 
 "************************ vim-devicons
 "启用文件夹图标, default = , 我是用了📂(这里default如果显示为问号之类的,
-"因为没有对应的 Hack Nerd Font 字体)
+"因为没有对应的 Hack Nerd Font 字体<http://nerdfonts.com/>)
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = '📂'
+let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = '📂' 
+"let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(62541) 
 
-
-"************************ nerdtree-git-plugin
+"************************ nerdtree-git-plugin, f91a, fc44
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✎ )",
-    \ "Staged"    : "+ )",
-    \ "Untracked" : "? )",
+    \ "Modified"  : " ",
+    \ "Staged"    : " )",
+    \ "Untracked" : "ﱄ )",
     \ "Renamed"   : "R )",
-    \ "Unmerged"  : "um)",
-    \ "Deleted"   : "✖ )",
-    \ "Dirty"     : "✗ )",
+    \ "Unmerged"  : "!)",
+    \ "Deleted"   : " )",
+    \ "Dirty"     : " )",
     \ "Clean"     : "✔︎ )",
-    \ 'Ignored'   : "ig)",
-    \ "Unknown"   : "?!)"
+    \ 'Ignored'   : " )",
+    \ "Unknown"   : " )"
     \ }
 
 
@@ -126,7 +161,7 @@ let g:ctrlp_by_filename = 1
 "搜索框选项
 let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
 "不忽略隐藏文件(夹)
-let g:ctrlp_show_hidden = 1
+let g:ctrlp_show_hidden = 0
 "忽略特定文件(夹)
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.(git|hg|svn|idea)$',
@@ -138,5 +173,30 @@ let g:ctrlp_max_files = 10000
 let g:ctrlp_max_depth = 40
 
 
-
+"************************ air-line
+"顶部tabline显示(tabline是管理vim buffer的, 比 vim tab 高效)
+let g:airline#extensions#tabline#enabled = 1
+"airline 当前主题
+let g:airline_theme='dark'
+"airline特殊字体需要开启该项, 不推荐
+"set ambiwidth=double
+"=== 快捷键
+"alt + ] 下一个buffer
+nmap ‘ :bn<CR>
+"alt + [ 上一个buffer
+nmap “ :bp<CR>
+"=== 图标
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+let g:airline#extensions#tabline#left_sep = ''
+let g:airline#extensions#tabline#left_alt_sep = ''
+let g:airline#extensions#tabline#close_symbol = nr2char(57869)
 
