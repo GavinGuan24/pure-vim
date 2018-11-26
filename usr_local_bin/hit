@@ -1,7 +1,7 @@
 #! /bin/sh
 
 #usage: hit <folder_path> <file_type> <snippet>
-#e.g.   hit .             *.java      "String()"
+#e.g.   hit .             "*.java"    "String()"
 
 w_error=0
 
@@ -32,7 +32,8 @@ if [[ "$w_error" != '0' ]]; then
 	echo "usage: hit <folder_path> <file_type> <snippet>\ne.g.   hit .             *.java      \"public static void main(String[] args) {\""
 else
 	echo hitted
-	find $w_path -type f -name $w_file_type | xargs grep -sinF "$w_key" | awk -F ':' '{print $1"("$2")>====>"substr($0, length($1)+length($2)+7)}'
+    find "$w_path" -type f -name "$w_file_type" | xargs grep -sinF "$w_key" | awk -F ':' '{print $1"("$2")>====>"substr($0, length($1)+length($2)+7)}'
+
 fi
 
 exit 0
