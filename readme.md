@@ -1,7 +1,9 @@
 # pure-vim
 
 **pure-vim** 是一个 **docker化** 的 vim.
-基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB
+
+基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB.
+
 **"docker化"**, **"习惯至上"**, **"核心而小巧"** 为原则
 
 ## 我想要的 pure-vim
