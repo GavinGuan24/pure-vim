@@ -15,9 +15,9 @@
 
 同时, 因为 pure-vim 是 docker 化的, 基于 alpine 的. 所以, 其本身就是一个完整的 linux, 我在 /usr/local/bin 中加入以下脚本作为辅助命令
     
-    - clean_cache: 清除 alpine 的 apk 命令的缓存
-    - hit: 不如 ag, 但是专注检索文件内容
-    - ll: 就是 ll
+- clean_cache: 清除 alpine 的 apk 命令的缓存
+- hit: 不如 ag, 但是专注检索文件内容
+- ll: 就是 ll
 
 
 ## 版本
