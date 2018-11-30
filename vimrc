@@ -5,10 +5,10 @@
 
 
 "========= vim necessary setting - vim 的必要设置
-set nocompatible    "禁用vim对vi的兼容模式
-set encoding=utf-8  "使用UTF-8
-let mapleader = ","   "leader键, 避免快捷键冲突
-set t_Co=256        "开启256彩色
+set nocompatible            "禁用vim对vi的兼容模式
+set encoding=utf-8          "使用UTF-8
+let mapleader = ","         "leader键, 避免快捷键冲突
+set t_Co=256                "开启256彩色
 
 
 "========= visible item - 可视组件 
@@ -18,10 +18,13 @@ set number          "显示行号
 
 
 "========= find - 查找
-set hlsearch        "查找时, 高亮所有匹配项
-set ignorecase      "查找时忽略大小写
-set incsearch       "查找框输入时即时高亮
-set wrapscan        "找到文件结尾后折返开头
+set hlsearch                "查找时, 高亮所有匹配项
+set ignorecase              "查找时忽略大小写
+set incsearch               "查找框输入时即时高亮
+set wrapscan                "找到文件结尾后折返开头
+set grepprg=ag\ --vimgrep   "使用 The Silver Searcher (ag) 替换 vim 默认的 grep
+"高亮的前景色与背景色
+hi Search term=standout ctermfg=0 ctermbg=3
 
 
 "========= coding - 编程
@@ -50,19 +53,62 @@ nmap µ :set mouse=a<CR>:set nu<CR>
 imap ß <Esc>:w<CR>i<Right>
 nmap ß :w<CR>
 
-"alt + w 关闭当前 vim tab 页 - 不推荐使用, 请使用 airline 替代
-imap ∑ ß<Esc>:tabc<CR>
-nmap ∑ ß:tabc<CR>
+"alt + w 关闭(同时保存)当前 airline 的 tabline 中的 tab 页, 即 关闭当前 buffer
+imap ∑ :call CloseCurrentTabFromTabline()<CR>
+nmap ∑ :call CloseCurrentTabFromTabline()<CR>
 
-"alt + c 使用鼠标的复制, alt + v 不依赖鼠标的粘贴, 注意 p/P会粘贴在光标右/左
+"shift + alt + w 关闭当前 vim tab 页 - 不推荐使用, 请使用 airline 替代
+imap „ ß<Esc>:tabc<CR>
+nmap „ ß:tabc<CR>
+
+"alt + c 复制, alt + v 粘贴, 注意 p/P会粘贴在光标右/左
 vnoremap ç y
 inoremap √ <Esc>pi<Right>
-nnoremap √ P  
+nnoremap √ P
+vnoremap √ P
 
 
 " 快速编辑我的 vimrc
-nmap <Leader>,s :e $MYVIMRC<CR>
-"========= beta - 试用功能
+nmap <Leader>,s :tabnew<CR>:e $MYVIMRC<CR>
+
+"====================== Gavin 自定义命令 start =====================
+"关闭(同时保存) airline 的 tabline 中当前展示的buffer
+function! CloseCurrentTabFromTabline() 
+    let a:sumOfListedBufs = len(getbufinfo({'buflisted':1}))
+    "buffers size == 1 ? 询问唯一的buffer如何处理 : 多buffer时如何处理
+    if a:sumOfListedBufs <= 1
+        try
+            :q
+        catch /E37:/
+            "unsaved changes
+            let a:forcequit = confirm("\033[31mUnsaved changes. Continue Quit Vim ?\033[0m", "&Yes, Quit.\n&No, Handle it now.", 1)
+            if a:forcequit == 1
+                :q!
+            endif
+        endtry
+    else
+        let a:currentBufNr = str2nr(winbufnr(winnr()))
+        let a:currentBufName = bufname(a:currentBufNr)
+        try
+            bp
+        catch /E37:/
+            if "" == a:currentBufName
+                let a:fileSuffix = string(localtime())
+                let a:howToDealUntitledBuf = confirm("\033[31mUnsaved [No Name] Buffer.\033[0m", "&Drop it.\n&Save it and named \"Untitled.".a:fileSuffix."\"", 1)
+                if a:howToDealUntitledBuf == 1
+                    :bp!
+                else
+                    execute "w "."Untitled.".a:fileSuffix
+                    :bp
+                endif
+            endif
+        endtry
+        execute 'bd! '.a:currentBufNr
+    endif
+endfunction
+
+"====================== Gavin 自定义命令 end =====================
+
 
 "========================================================
 "===================== vim-plug 管理器 ==================
@@ -89,7 +135,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'PangPangPangPangPang/vim-terminal'
 
 "CtrlP
-"   按文件路径, 文件名搜索
+"   配合 ag 按文件路径, 文件名搜索
 Plug 'ctrlpvim/ctrlp.vim'
 
 "airline
@@ -100,9 +146,35 @@ Plug 'vim-airline/vim-airline'
 "   可使用该插件更换
 "Plug 'vim-airline/vim-airline-themes'
 
-"vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件需要最后一个加载
-Plug 'ryanoasis/vim-devicons'
+"fugitive 
+"   git 的很多功能进行了封装, 我暂时不重度使用它
+"   只是rangta配合airline显示当前的git分支状态
 Plug 'tpope/vim-fugitive'
+
+"CtrlSF 
+"   全局文件片段搜索器, 配合ag使用
+Plug 'dyng/ctrlsf.vim'
+
+"multiple-cursors
+"   多光标编辑, 可配合CtrlSF使用
+"   我依旧有些使用上的疑问, 该插件的没有完整的防
+"   误操作, 按键要生效就离手别搞出一些神奇的事情
+"   建议仅在 normal, visual 模式下使用该插件
+Plug 'terryma/vim-multiple-cursors'
+
+"nerdcommenter
+"   快速多行注释
+Plug 'scrooloose/nerdcommenter'
+
+"tagbar
+"   提供文件概览信息
+Plug 'majutsushi/tagbar'
+
+"devicons
+"   vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件
+"   应是最后一个加载的UI插件
+Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 
 "==================================
@@ -129,12 +201,16 @@ let g:nerdtree_tabs_autoclose = 1
 "快速开关 NERDTree
 nmap <Leader>1 :NERDTreeTabsToggle<CR>
 
+
 "************************ vim-devicons
-"启用文件夹图标, default = , 我是用了📂(这里default如果显示为问号之类的,
+"启用文件夹图标, default = , 你可以使用📂(这里default如果显示为问号之类的,
 "因为没有对应的 Hack Nerd Font 字体<http://nerdfonts.com/>)
+"手动没法输入的符号, 可以使用nr2char()实现输入, 参数是十进制的,
+"nerdfonts.com 中的字体码是十六进制的, 需要转换一下
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = '📂' 
-"let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(62541) 
+let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(58878) 
+"let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(58878) 
+
 
 "************************ nerdtree-git-plugin, f91a, fc44
 let g:NERDTreeIndicatorMapCustom = {
@@ -152,31 +228,40 @@ let g:NERDTreeIndicatorMapCustom = {
 
 
 "************************ vim-terminal
-"F2, 快速开启vim内窗口terminal
+"快速开启vim内窗口terminal
 nmap <Leader>2 :VSTerminalToggle<CR>
+
 
 "************************ CtrlP
 "优先按文件名搜索, ctrl + d 或者 ctrl + r 启用全路径或正则表达式
-let g:ctrlp_by_filename = 1
+let g:ctrlp_by_filename = 0
 "搜索框选项
 let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
-"不忽略隐藏文件(夹)
-let g:ctrlp_show_hidden = 0
-"忽略特定文件(夹)
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\v[\/]\.(git|hg|svn|idea)$',
-    \ 'file': '\v\.(exe|so|dll|iws|iml|ipr|swp|DS_Store)$'
-    \ }
-"扫描文件数上限
-let g:ctrlp_max_files = 10000
-"递归目录树上限
-let g:ctrlp_max_depth = 40
+"------------------------------------------------------------------------------
+" 用于使用了 ag 作为 ctrlp_user_command, ctrlp 将会提速几个数量级
+" 随之而来的副作用是 ctrlp 的部分搜索相关的参数会失效, 但幸运的是
+" 我们可以配置.
+"
+" 1. 将搜索命令加上 '--hidden', 表示不过滤隐藏文件
+" let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+"
+" 2. 配置你的.ignore 文件
+" https://stackoverflow.com/questions/18285751/use-ag-in-ctrlp-vim
+" https://github.com/ggreer/the_silver_searcher/wiki/Advanced-Usage
+" 从ag 2.0.0 开始, 规范使用'.ignore', 弃用 '.agignore'
+" ag 会遵从工作目录下所有 '.*ignore' 文件. 但对 .gitignore 的 '**'
+" 双星语法不支持
+"------------------------------------------------------------------------------
+" ag 已经足够快, 无需 ctrlp 使用缓存
+let g:ctrlp_use_caching = 0
+" 使用 ag 作为搜索命令, 默认不搜索隐藏文件
+let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
 
 "************************ air-line
 "顶部tabline显示(tabline是管理vim buffer的, 比 vim tab 高效)
 let g:airline#extensions#tabline#enabled = 1
-"airline 当前主题
+"airline 当前主题, 默认dark, 如需切换主体, 请先启用插件vim-airline-themes
 let g:airline_theme='dark'
 "airline特殊字体需要开启该项, 不推荐
 "set ambiwidth=double
@@ -200,3 +285,38 @@ let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#close_symbol = nr2char(57869)
 
+
+"************************ctrlsf.vim
+"=== 快捷键
+"手动输入内容进行搜索
+nmap <Leader>f :CtrlSF<Space>
+"开关搜索窗
+nmap <Leader>F :CtrlSFToggle<CR>
+vmap <Leader>f <Plug>CtrlSFVwordExec
+
+
+"************************vim-multiple-cursors
+"使用自定义快捷键. 前四个功能两两一组的区别貌似不大
+let g:multi_cursor_use_default_mapping=0
+"=== 快捷键
+let g:multi_cursor_start_word_key      = '’'            "alt + shift + ]
+let g:multi_cursor_select_all_word_key = 'Å'            "alt + shift + a
+let g:multi_cursor_start_key           = '—'            "alt + shift + -
+let g:multi_cursor_select_all_key      = '±'            "alt + shift + +
+"---
+let g:multi_cursor_next_key            = '’'            "alt + shift + ]
+let g:multi_cursor_prev_key            = '”'            "alt + shift + [
+let g:multi_cursor_skip_key            = '»'            "alt + shift + \
+let g:multi_cursor_quit_key            = '<Esc>'        "esc
+
+
+"************************ nerd commenter
+"=== 快捷键
+" alt + / 快速注解与取消注解
+nmap ÷ <Leader>c<Space>
+vmap ÷ <Leader>c<Space>
+
+"************************ tagbar
+"=== 快捷键
+"快速开关文件概览窗, 仅支持部分文件
+nmap <Leader>3 :TagbarToggle<CR>
