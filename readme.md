@@ -16,8 +16,25 @@
 同时, 因为 pure-vim 是 docker 化的, 基于 alpine 的. 所以, 其本身就是一个完整的 linux, 我在 /usr/local/bin 中加入以下脚本作为辅助命令
     
 - clean_cache: 清除 alpine 的 apk 命令的缓存
+
+```sh
+#e.g. 
+clean_cache
+```
+
 - hit: 不如 ag, 但是专注检索文件内容
+
+```sh
+#e.g.   
+hit . "*.java" "String()"
+```
+
 - ll: 就是 ll
+
+```sh
+#e.g. 
+ll
+```
 
 
 ## 版本
@@ -127,5 +144,50 @@ vim
 
 - ultisnips
 - snipMate
+
+## 版本更新说明
+
+#### 0.1.2
+
+追加整合插件
+
+- CtrlSF
+- vim-multiple-cursors
+- tagbar
+
+追加整合命令
+
+- the_silver_searcher(ag命令), 将其与 CtrlP, CtrlSF 整合. 因 ag 非常高效, 已关闭插件缓存功能.
+- ctags(5.8), 支持 tagbar
+
+
+追加 vim 快捷键
+
+- **"alt + w"**: 原为 **"关闭 vim tab"**, 现为 **"关闭 vim buffer"**. 原因是 buffer 比 tab 高效, 而我在使用中给自己提出了一个关闭 tabline(由airline提供) 中的 tab页 的需求. 具体实现请参考我实现的function `CloseCurrentTabFromTabline()`
+- **"alt + shift + w"**: 由于 "alt + w" 被 **"关闭 vim buffer"** 占用, 所以将 **"关闭 vim tab"** 快捷键调整为这个.
+
+#### 0.1.1
+
+整合了以下插件, 自定义了不喜欢的快捷键
+
+- vim-plug
+- vim-devicons
+- NERDTree
+- vim-nerdtree-tabs
+- nerdtree-git-plugin
+- vim-terminal
+- ctrlp
+- vim-airline
+- fugitive
+
+## 感谢
+
+我就不逐一提及了. 
+在这里我感谢所有插件的 coder, 相关社区, 提问者, 回答者(讨论者), vim 8.x 文档的编写者/译者(虽然有些内容难找, 难懂, 小小的笔误. 就是吐槽一下. 😂).
+
+## License
+
+[MIT License Copyright (c) 2018 Gavin](https://github.com/GavinGuan24/pure-vim/blob/master/LICENSE)
+
 
 
