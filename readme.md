@@ -2,7 +2,7 @@
 
 **pure-vim** 是一个 **docker化** 的 vim.
 
-基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB.
+基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB. 在 PlugInstall 之后会增加 33.3 MB 的插件空间.
 
 **"docker化"**, **"习惯至上"**, **"核心而小巧"** 为原则
 
@@ -84,6 +84,14 @@ vim
 :PlugInstall
 # 提示插件安装完成后, 关闭vim, 重新进入 vim 即可开始你的 coding
 ```
+
+如果你的网络不好, 我也准备了 vim.tgz 文件, 你可以不用 PlugInstall, 把 vim.tgz 放到容器中 /root/, 然后直接执行
+
+```sh
+# 解压 vim 至 /root/.vim/
+tar -zxvf vim.tgz
+```
+
 #### 2. 快捷键(不同系统的终端对 Alt, Cmd 等特殊键值的处理方式不一, 以下配置仅在 Mac/iTerm 中使用过)
 
 插件自带的快捷键如果少量且方便记忆的, 我基本没有改过. 
