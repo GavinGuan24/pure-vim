@@ -54,6 +54,9 @@ ll
 执行
 
 ```sh
+# 仓库中有 vim.tgz 文件较大, 你可以使用部分克隆, 排除掉那个文件来加速克隆的过程
+# vim.tgz 是为了网络不好时, 直接覆盖 ~/.vim/ 而准备的. 并不是必选项.
+# 这里默认克隆整个仓库
 git clone git@github.com:GavinGuan24/pure-vim.git
 cd pure-vim
 vim run_container.sh
