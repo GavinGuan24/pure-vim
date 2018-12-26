@@ -29,7 +29,7 @@ fi
 echo 'search path:'$w_path', file type:'$w_file_type', key:'$w_key
 if [[ "$w_error" != '0' ]]; then
 	echo 'error: '$w_error
-	echo "usage: hit <folder_path> <file_type> <snippet>\ne.g.   hit .             *.java      \"public static void main(String[] args) {\""
+	echo -e "usage: hit <folder_path> <file_type> <snippet>\ne.g.   hit .             *.java      \"public static void main(String[] args) {\""
 else
 	echo hitted
     find "$w_path" -type f -name "$w_file_type" | xargs grep -sinF "$w_key" | awk -F ':' '{print $1"("$2")>====>"substr($0, length($1)+length($2)+7)}'
