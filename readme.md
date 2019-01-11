@@ -1,17 +1,24 @@
 # pure-vim
 
+
+#### 前言
+
+在 0.1.3 发布时, 我正在尝试使用这个项目到工作环境 "java + maven + lombok". 不得不说, 非常头疼, 印证了大家说的, vim 不适合用于编辑 java 项目. 所以, 这个项目未来将会作为种子项目, 我会对于不同的工作环境配置不同的定制化vim.
+
+## 简介
+
 **pure-vim** 是一个 **docker化** 的 vim.
 
-基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB. 在 PlugInstall 之后会增加 33.3 MB 的插件空间.
+基于 alpine 的镜像, 使用脚本 build 完成的镜像, 只有 47.6MB.
 
-**"docker化"**, **"习惯至上"**, **"核心而小巧"** 为原则
+**"docker化"**, **"习惯至上"**, **"核心而小巧"** 为原则.
 
 ## 我想要的 pure-vim
 
 我想要的 **pure-vim** 是一个 **类IDE( IDE like )**, **不具有**一个完善的IDE的**所有**功能, 而是有着 IDE **最核心功能**的编辑器.
 
 为选定一个技术栈之后定制 pure-vim 提供方便.
-所以它不会像 [spacevim](https://spacevim.org/) 一样, 将数个流行编程语言的各种IDE集成功能都包含进去, 那样太大了.
+所以它不会像 [spacevim](https://spacevim.org/) 一样, 将数个流行编程语言的各种IDE集成功能都包含进去, 那样太大了. **我期望定制之后的版本也尽可能只引入非常核心的 IDE 编辑功能, 并将其定位于第二开发工具. 因为毕竟vim是基于终端的.**
 
 同时, 因为 pure-vim 是 docker 化的, 基于 alpine 的. 所以, 其本身就是一个完整的 linux, 我在 /usr/local/bin 中加入以下脚本作为辅助命令
     
@@ -41,10 +48,11 @@ ll
 
 #### 当前版本
 
-0.1.2
+0.1.3
 
 #### 历史版本
 
+0.1.2
 0.1.1
 
 ## 使用它
@@ -56,9 +64,6 @@ ll
 执行
 
 ```sh
-# 仓库中有 vim.tgz 文件较大, 你可以使用部分克隆, 排除掉那个文件来加速克隆的过程
-# vim.tgz 是为了网络不好时, 直接覆盖 ~/.vim/ 而准备的. 并不是必选项.
-# 这里默认克隆整个仓库
 git clone git@github.com:GavinGuan24/pure-vim.git
 cd pure-vim
 vim run_container.sh
@@ -90,12 +95,6 @@ vim
 # 提示插件安装完成后, 关闭vim, 重新进入 vim 即可开始你的 coding
 ```
 
-如果你的网络不好, 我也准备了 vim.tgz 文件, 你可以不用 PlugInstall, 把 vim.tgz 放到容器中 /root/, 然后直接执行
-
-```sh
-# 解压 vim 至 /root/.vim/
-tar -zxvf vim.tgz
-```
 
 #### 2. 快捷键(不同系统的终端对 Alt, Cmd 等特殊键值的处理方式不一, 以下配置仅在 Mac/iTerm 中使用过)
 
@@ -146,19 +145,19 @@ tar -zxvf vim.tgz
 - CtrlSF: 全局文件内容搜索
 - vim-multiple-cursors: 多光标编辑
 - tagbar: 提供文件概览信息, 仅支持部分文件类型
+- ale: 异步语法检测插件, **这个我并没有真正完成整合, 因为不同语言需要不同的环境配置, 在尝试配合 [java + maven] 时, 我头疼不已.**
+- vim-snipmate 与 vim-snippets
 
 部分插件名或重复, 请以vimrc内容为准
 
-
-## 试用中或尝试整合的插件
-
-- syntastic
-- ale
-
-- ultisnips
-- snipMate
-
 ## 版本更新说明
+
+#### 0.1.3
+
+追加整合插件
+
+- vim-snipmate 与 vim-snippets
+- ale(仅仅添加了插件, 没有对接任何语言的语法检测)
 
 #### 0.1.2
 
@@ -167,6 +166,7 @@ tar -zxvf vim.tgz
 - CtrlSF
 - vim-multiple-cursors
 - tagbar
+- nerdcommenter
 
 追加整合命令
 
@@ -191,7 +191,7 @@ tar -zxvf vim.tgz
 - vim-terminal
 - ctrlp
 - vim-airline
-- fugitive
+- vim-fugitive
 
 ## 感谢
 

@@ -7,6 +7,7 @@
 "========= vim necessary setting - vim 的必要设置
 set nocompatible            "禁用vim对vi的兼容模式
 set encoding=utf-8          "使用UTF-8
+set backspace=2
 let mapleader = ","         "leader键, 避免快捷键冲突
 set t_Co=256                "开启256彩色
 
@@ -130,8 +131,8 @@ Plug 'jistr/vim-nerdtree-tabs'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
 "vim terminal
-"   在 vim 中快速开启一个 vim split 来使用 terminal(该插件功能有限,
-"   不推荐重度使用)
+"   在 vim 中快速开启一个 vim split 来使用 terminal(基于 vim8.1 支持窗口中运行终端,
+"   但输出内容会被新输出的flush掉, 不推荐重度使用)
 Plug 'PangPangPangPangPang/vim-terminal'
 
 "CtrlP
@@ -169,6 +170,19 @@ Plug 'scrooloose/nerdcommenter'
 "tagbar
 "   提供文件概览信息
 Plug 'majutsushi/tagbar'
+
+"vim-snipmate 与 vim-snippets
+"   代码片段工具
+"   vim-snipmate 基于 vim script, 提供片段补全功能, 自定义片段功能
+"   vim-snippets 一个代码片段库, 自身支持多种语言的常用片段
+"   vim-addon-mw-utils 与 tlib_vim 都是 snipmate 的依赖
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+Plug 'honza/vim-snippets'
+Plug 'w0rp/ale'
+
+
 
 "devicons
 "   vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件
@@ -236,7 +250,7 @@ nmap <Leader>2 :VSTerminalToggle<CR>
 "优先按文件名搜索, ctrl + d 或者 ctrl + r 启用全路径或正则表达式
 let g:ctrlp_by_filename = 0
 "搜索框选项
-let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:15'
+let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:20,results:0'
 "------------------------------------------------------------------------------
 " 用于使用了 ag 作为 ctrlp_user_command, ctrlp 将会提速几个数量级
 " 随之而来的副作用是 ctrlp 的部分搜索相关的参数会失效, 但幸运的是
@@ -297,7 +311,7 @@ vmap <Leader>f <Plug>CtrlSFVwordExec
 
 "************************vim-multiple-cursors
 "使用自定义快捷键. 前四个功能两两一组的区别貌似不大
-let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_use_default_mapping = 0
 "=== 快捷键
 let g:multi_cursor_start_word_key      = '’'            "alt + shift + ]
 let g:multi_cursor_select_all_word_key = 'Å'            "alt + shift + a
@@ -320,3 +334,36 @@ vmap ÷ <Leader>c<Space>
 "=== 快捷键
 "快速开关文件概览窗, 仅支持部分文件
 nmap <Leader>3 :TagbarToggle<CR>
+
+
+"************************ vim-snipmate
+"--------------------------------------------------------------
+"因为插件管理是基于git的, 所以我们假定
+"~/.vim/plugged/vim-snippets/snippets 文件夹在使
+"用vim中, 随时会被更新. 解决方案是将snippets文件放
+"在~/.vim/after/snippets下, 命名方式如下:
+"
+"   _.snippets              全局, 不区分文件类型
+"   java_gavin.snippets     扩展java文件的代码块, '_'后面
+"                           的'gavin'可以替换成你喜欢的任何名字
+"--------------------------------------------------------------
+"使用vim的作者的名字
+let g:snips_author = 'Vimer'
+"开启可选项
+let g:snipMate = {}
+"---文件类型别名, e.g. key:md value:md, markdown
+let g:snipMate.scope_aliases = {}
+"---使用新版解析器
+let g:snipMate.snippet_version = 1
+"---若两个代码片段重名, 使用后加载的那个
+"---(这里保证了.vim/after/snippets下的片段为最终值)
+let g:snipMate.override = 1
+"---显示代码片段描述信息
+let g:snipMate.description_in_completion = 1
+
+
+"************************ ale
+" 总是显示语法报错标记栏
+" let g:ale_sign_column_always = 1
+" 使用 javac 对java 进行语法检测时, 使用的javac 命令所在路径
+" let g:ale_java_javac_executable = '/usr/local/bin/g_javac'
