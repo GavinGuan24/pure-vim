@@ -198,6 +198,87 @@ vim
 我就不逐一提及了. 
 在这里我感谢所有插件的 coder, 相关社区, 提问者, 回答者(讨论者), vim 8.x 文档的编写者/译者(虽然有些内容难找, 难懂, 小小的笔误. 就是吐槽一下. 😂).
 
+## 以下是构建时, 我遭遇的问题
+
+### vimrc 中 mouse 的值 ? vimrc 中 map 的各个模式 ?
+
+决定 vim 在什么场合下会使用鼠标:
+n 普通模式
+v 可视模式
+i 插入模式
+c 命令行模式
+h 在帮助文件里，以上所有的模式
+a 以上所有的模式
+r 跳过 |hit-enter| 提示
+A 在可视模式下自动选择
+
+这里我一般只考虑 "set mouse=" 与 "set mouse=a", 所有模式下禁用或启用鼠标
+
+map的前缀模式 map nmap nnoremap ?
+
+- nore
+表示非递归。
+递归的映射。其实很好理解，也就是如果键a被映射成了b，c又被映射成了a，如果映射是递归的，那么c就被映射成了b。
+- n
+表示在普通模式下生效
+- v
+表示在可视模式下生效
+- i
+表示在插入模式下生效
+- c
+表示在命令行模式下生效
+
+### 键盘 key 与 vimrc 中表示该 key 的标识的对应关系 ?
+
+key跟标识的对应关系，详情可见 **:help key-notation**
+
+### Vim中无法用Alt键来映射
+
+"<A+key>" 格式替换为 "^[key" 格式, 可以在 insert 模式下, Crtl+v 后再按下 Alt+key(你想设置的键). 我猜测是早期并没有很多特殊符号, "<A+key>"是可以生效的, 而现代键盘使用组合件 **alt + key** 时, 有些组合会输入特殊意义的字符, 例如 alt + t = †, alt + z = Ω
+
+### 使用 vim-devicons 对 NERDTree 优化时, 图标显示为问号或方框
+
+由于vimrc中, 我已经 "set encoding=utf-8", 所以一定不是编码的问题, 猜想是字体的问题. 以下贴子佐证了我的猜想 
+[遇到同样问题的老外](https://github.com/ryanoasis/vim-devicons/issues/198)
+[vim-devicons Q&A 解答](https://github.com/ryanoasis/nerd-fonts#option-1-download-and-install-manually)
+问题是当前要做的, 是给基础镜像 alpine 增加一个字体, 还是给我使用的 iTerm2 设置一下字体呢 ?
+当然是后者, vim 使用中, 文本最终的展现形式是用显示出来的那台电脑决定的, 难道ssh到别的主机, 别人安装好字体, 我的终端就可以使用 ? 显然是不行的.
+iTerm2 -> Preferences -> Profiles -> Text -> Font -> Use a different font for non-ASCii text, 勾选后, 在 Non-ASCii Font -> Change Font -> Hack Nerd Font.
+
+字体怎么来的 ? 上面的贴子写的很清楚, 你要安装在自己的电脑上, 我的是 Mac, 使用 homebrew 安装即可
+
+```sh
+brew tap caskroom/fonts
+brew cask install font-hack-nerd-font
+```
+
+### airline 没有颜色, 美化字体powerline 已被包含在 nerd font 中, 怎么找到 ?
+
+由于 vim 默认是 8 彩色, air-line 是 256 彩色, 所以, 需要在 .vimrc 中追加
+
+```vim
+set t_Co=256        "开启256彩色
+```
+字体在这里找
+http://nerdfonts.com/
+
+搜 -PL- -PLE-
+
+特殊字体需要追加
+
+```vim
+set ambiwidth=double
+```
+
+### vim buffer
+
+[vim buffers](https://blog.csdn.net/fudesign2008/article/details/7295138)
+
+### airline 的 tabline 在切换 buffer 时 卡顿
+
+实际上只有 .vimrc 会造成卡顿, 因为测试文件夹和 /root/ 一个是宿主机挂载, 一个是容器内
+
+
 ## License
 
 [MIT License Copyright (c) 2018 Gavin](https://github.com/GavinGuan24/pure-vim/blob/master/LICENSE)
