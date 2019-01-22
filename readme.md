@@ -281,7 +281,7 @@ set ambiwidth=double
 
 ## License
 
-[MIT License Copyright (c) 2018 Gavin](https://github.com/GavinGuan24/pure-vim/blob/master/LICENSE)
+[MIT License Copyright (c) 2018~2019 Gavin](https://github.com/GavinGuan24/pure-vim/blob/master/LICENSE)
 
 
 
