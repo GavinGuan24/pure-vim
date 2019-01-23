@@ -12,6 +12,6 @@ fi
 
 mkdir -p $target_folder$g_version/
 
-docker run -itd --name purevim_$g_version -v $target_folder$g_version/:/root/purevim gavin:pure-vim_$g_version
+docker run -itd --restart unless-stopped --name purevim_$g_version -v $target_folder$g_version/:/root/purevim -p 60022:22 gavin:pure-vim_$g_version /usr/sbin/sshd -D
 
 exit 0
