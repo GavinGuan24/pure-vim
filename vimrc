@@ -130,11 +130,6 @@ Plug 'jistr/vim-nerdtree-tabs'
 "   提供有限的文件git状态展示功能
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-"vim terminal
-"   在 vim 中快速开启一个 vim split 来使用 terminal(基于 vim8.1 支持窗口中运行终端,
-"   但输出内容会被新输出的flush掉, 不推荐重度使用)
-Plug 'PangPangPangPangPang/vim-terminal'
-
 "CtrlP
 "   配合 ag 按文件路径, 文件名搜索
 Plug 'ctrlpvim/ctrlp.vim'
@@ -180,8 +175,12 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
+"ale
+"   语法检测框架, 实际的校验器, 需要自己配置到系统, 例: javac
 Plug 'w0rp/ale'
-
+"ctrlp-py-matcher
+"   CtrlP 使用 vim script 匹配搜索到的结果, 性能极差, 本插件为性能而生
+Plug 'felikz/ctrlp-py-matcher'
 
 
 "devicons
@@ -243,14 +242,14 @@ let g:NERDTreeIndicatorMapCustom = {
 
 "************************ vim-terminal
 "快速开启vim内窗口terminal
-nmap <Leader>2 :VSTerminalToggle<CR>
+nmap <Leader>2 :sh<CR>
 
 
 "************************ CtrlP
 "优先按文件名搜索, ctrl + d 或者 ctrl + r 启用全路径或正则表达式
 let g:ctrlp_by_filename = 0
 "搜索框选项
-let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:20,results:0'
+let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:0'
 "------------------------------------------------------------------------------
 " 用于使用了 ag 作为 ctrlp_user_command, ctrlp 将会提速几个数量级
 " 随之而来的副作用是 ctrlp 的部分搜索相关的参数会失效, 但幸运的是
@@ -269,7 +268,16 @@ let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:20,results:0'
 " ag 已经足够快, 无需 ctrlp 使用缓存
 let g:ctrlp_use_caching = 0
 " 使用 ag 作为搜索命令, 默认不搜索隐藏文件
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_user_command = 'ag %s -il --nocolor --nogroup --ignore ".git" --ignore ".DS_Store" --ignore "node_modules" --hidden -g ""'
+let g:ctrlp_lazy_update = 150
+let g:ctrlp_max_files = 0
+" 使用 ctrlp-py-matcher 优化 CtrlP 的速度
+if !has('python')
+    echo 'In order to use pymatcher plugin, you need +python compiled vim'
+else
+    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
+endif
 
 
 "************************ air-line
@@ -366,4 +374,5 @@ let g:snipMate.description_in_completion = 1
 " 总是显示语法报错标记栏
 " let g:ale_sign_column_always = 1
 " 使用 javac 对java 进行语法检测时, 使用的javac 命令所在路径
-" let g:ale_java_javac_executable = '/usr/local/bin/g_javac'
+let g:ale_java_javac_executable = 'javac'
+

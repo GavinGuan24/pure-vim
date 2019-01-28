@@ -1,22 +1,70 @@
+FROM alpine:latest as builder
+
+WORKDIR /tmp
+
+# Install dependencies
+RUN apk add --no-cache \
+    build-base \
+    ctags \
+    git \
+    libx11-dev \
+    libxpm-dev \
+    libxt-dev \
+    make \
+    ncurses-dev \
+    python \
+    python-dev
+
+# Build vim from git source
+RUN git clone https://github.com/vim/vim \
+ && cd vim \
+ && ./configure \
+    --disable-gui \
+    --disable-netbeans \
+    --enable-multibyte \
+    --enable-pythoninterp \
+    --with-features=big \
+    --with-python-config-dir=/usr/lib/python2.7/config \
+ && make install
+
+################################################################
+
 FROM anapsix/alpine-java:8_jdk
 #FROM alpine
+
+# 从容器中获取自定义编译的vim
+COPY --from=builder /usr/local/bin/ /usr/local/bin
+COPY --from=builder /usr/local/share/vim/ /usr/local/share/vim/
 
 COPY ./usr_local_bin/ /usr/local/bin
 COPY ./vimrc /root/.vimrc
 #COPY ./jdk1.8.0_202 /usr/local/jdk
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-	&& apk add --no-cache bash vim git curl the_silver_searcher ctags tzdata openssh \
-#	&& apk add --no-cache bash vim git curl the_silver_searcher ctags tzdata openssh ca-certificates\
+	&& apk --no-cache add diffutils libice libsm libx11 libxt ncurses \
+	&& echo -e '# self-defined\n' >> /etc/profile \
+	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
+	&& echo -e '\n' >> /etc/profile \
+#	alpine 非常精简, 这里加几个常用的工具
+	&& apk add --no-cache bash git curl tzdata openssh \
+#	vim 插件中依赖的外部命令行工具
+	&& apk add --no-cache the_silver_searcher ctags \
+#	自行安装jdk8时, 需要 CA 证书验证工具
+#	&& apk add --no-cache ca-certificates \
+#	给自定义的脚本 755 权限
 	&& chmod 755 /usr/local/bin/* \
+#	安装 vim-plug
 	&& curl -fLo /root/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+#	时区 东八
 	&& ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 	&& echo 'Asia/Shanghai' > /etc/timezone \
+#	ssh 允许 root 登录, 并且设定 root 密码, ssh 初始化
 	&& sed -i s/#PermitRootLogin.*/PermitRootLogin\ yes/ /etc/ssh/sshd_config \
 	&& sed -i s/ash/bash/ /etc/passwd \
 	&& echo "root:gavin" | chpasswd \
 	&& ssh-keygen -A \
+#   自行安装jdk8时, 安装依赖的CA证书, 安装依赖, 环境配置
 #	&& wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
 #	&& wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-2.28-r0.apk \
 #	&& wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.28-r0/glibc-bin-2.28-r0.apk \
@@ -24,14 +72,14 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 #	&& rm -rf glibc-2.28-r0.apk glibc-bin-2.28-r0.apk \
 #	&& ln -s /lib/libc.musl-x86_64.so.1 /usr/lib/libc.musl-x86_64.so.1 \
 #	&& ln -s /lib/libz.so.1 /usr/lib/libz.so.1 \
-#	&& echo -e 'export JAVA_HOME=/usr/local/jdk\nexport PATH=.:$JAVA_HOME/bin:$PATH' >> /etc/profile \
+#	&& echo -e 'export JAVA_HOME=/usr/local/jdk\nexport PATH=.:$JAVA_HOME/bin:$PATH\n' >> /etc/profile \
+#	此处的java_home 是 image 中带有的, 并不是自行安装的
+	&& echo -e 'export JAVA_HOME=/opt/jdk1.8.0_192\nexport PATH=.:$JAVA_HOME/bin:$PATH\n' >> /etc/profile \
+#	maven 安装及环境配置
 	&& wget http://mirrors.shu.edu.cn/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz \
 	&& tar -zxf apache-maven-3.6.0-bin.tar.gz && mv apache-maven-3.6.0 /usr/local/maven \
 	&& rm -rf apache-maven-3.6.0-bin.tar.gz \
-	&& echo -e '# self-defined\n' >> /etc/profile \
-	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
-	&& echo -e '\n' >> /etc/profile \
-	&& echo -e 'export JAVA_HOME=/opt/jdk1.8.0_192\nexport PATH=.:$JAVA_HOME/bin:$PATH\nexport MAVEN_HOME=/usr/local/maven\nexport PATH=$PATH:$MAVEN_HOME/bin' >> /etc/profile \
+	&& echo -e 'export MAVEN_HOME=/usr/local/maven\nexport PATH=$PATH:$MAVEN_HOME/bin\n' \
 	&& echo "Finished. J-vim."
 CMD /usr/sbin/sshd -D
 
