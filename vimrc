@@ -72,6 +72,9 @@ vnoremap √ P
 " 快速编辑我的 vimrc
 nmap <Leader>,s :tabnew<CR>:e $MYVIMRC<CR>
 
+" 打开终端
+nmap <Leader>2 :sh<CR>
+
 "====================== Gavin 自定义命令 start =====================
 "关闭(同时保存) airline 的 tabline 中当前展示的buffer
 function! CloseCurrentTabFromTabline() 
@@ -130,10 +133,6 @@ Plug 'jistr/vim-nerdtree-tabs'
 "   提供有限的文件git状态展示功能
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-"CtrlP
-"   配合 ag 按文件路径, 文件名搜索
-Plug 'ctrlpvim/ctrlp.vim'
-
 "airline
 "   提供 status/tab line, 同时支持多个插件,例如: fugitive
 Plug 'vim-airline/vim-airline'
@@ -178,10 +177,6 @@ Plug 'honza/vim-snippets'
 "ale
 "   语法检测框架, 实际的校验器, 需要自己配置到系统, 例: javac
 Plug 'w0rp/ale'
-"ctrlp-py-matcher
-"   CtrlP 使用 vim script 匹配搜索到的结果, 性能极差, 本插件为性能而生
-Plug 'felikz/ctrlp-py-matcher'
-
 
 "devicons
 "   vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件
@@ -225,7 +220,7 @@ let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(58878)
 "let g:WebDevIconsUnicodeDecorateFolderNodesDefaultSymbol = nr2char(58878) 
 
 
-"************************ nerdtree-git-plugin, f91a, fc44
+"************************ nerdtree-git-plugin
 let g:NERDTreeIndicatorMapCustom = {
     \ "Modified"  : " ",
     \ "Staged"    : " )",
@@ -238,47 +233,6 @@ let g:NERDTreeIndicatorMapCustom = {
     \ 'Ignored'   : " )",
     \ "Unknown"   : " )"
     \ }
-
-
-"************************ vim-terminal
-"快速开启vim内窗口terminal
-nmap <Leader>2 :sh<CR>
-
-
-"************************ CtrlP
-"优先按文件名搜索, ctrl + d 或者 ctrl + r 启用全路径或正则表达式
-let g:ctrlp_by_filename = 0
-"搜索框选项
-let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:15,results:0'
-"------------------------------------------------------------------------------
-" 用于使用了 ag 作为 ctrlp_user_command, ctrlp 将会提速几个数量级
-" 随之而来的副作用是 ctrlp 的部分搜索相关的参数会失效, 但幸运的是
-" 我们可以配置.
-"
-" 1. 将搜索命令加上 '--hidden', 表示不过滤隐藏文件
-" let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-"
-" 2. 配置你的.ignore 文件
-" https://stackoverflow.com/questions/18285751/use-ag-in-ctrlp-vim
-" https://github.com/ggreer/the_silver_searcher/wiki/Advanced-Usage
-" 从ag 2.0.0 开始, 规范使用'.ignore', 弃用 '.agignore'
-" ag 会遵从工作目录下所有 '.*ignore' 文件. 但对 .gitignore 的 '**'
-" 双星语法不支持
-"------------------------------------------------------------------------------
-" ag 已经足够快, 无需 ctrlp 使用缓存
-let g:ctrlp_use_caching = 0
-" 使用 ag 作为搜索命令, 默认不搜索隐藏文件
-"let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-let g:ctrlp_user_command = 'ag %s -il --nocolor --nogroup --ignore ".git" --ignore ".DS_Store" --ignore "node_modules" --hidden -g ""'
-let g:ctrlp_lazy_update = 150
-let g:ctrlp_max_files = 0
-" 使用 ctrlp-py-matcher 优化 CtrlP 的速度
-if !has('python')
-    echo 'In order to use pymatcher plugin, you need +python compiled vim'
-else
-    let g:ctrlp_match_func = { 'match': 'pymatcher#PyMatch' }
-endif
-
 
 "************************ air-line
 "顶部tabline显示(tabline是管理vim buffer的, 比 vim tab 高效)

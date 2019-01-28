@@ -1,47 +1,11 @@
-FROM alpine:latest as builder
-
-WORKDIR /tmp
-
-# Install dependencies
-RUN apk add --no-cache \
-    build-base \
-    ctags \
-    git \
-    libx11-dev \
-    libxpm-dev \
-    libxt-dev \
-    make \
-    ncurses-dev \
-    python \
-    python-dev
-
-# Build vim from git source
-RUN git clone https://github.com/vim/vim \
- && cd vim \
- && ./configure \
-    --disable-gui \
-    --disable-netbeans \
-    --enable-multibyte \
-    --enable-pythoninterp \
-    --with-features=big \
-    --with-python-config-dir=/usr/lib/python2.7/config \
- && make install
-
-################################################################
-
 FROM anapsix/alpine-java:8_jdk
 #FROM alpine
-
-# 从容器中获取自定义编译的vim
-COPY --from=builder /usr/local/bin/ /usr/local/bin
-COPY --from=builder /usr/local/share/vim/ /usr/local/share/vim/
 
 COPY ./usr_local_bin/ /usr/local/bin
 COPY ./vimrc /root/.vimrc
 #COPY ./jdk1.8.0_202 /usr/local/jdk
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
-	&& apk --no-cache add diffutils libice libsm libx11 libxt ncurses \
 	&& echo -e '# self-defined\n' >> /etc/profile \
 	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
 	&& echo -e '\n' >> /etc/profile \
