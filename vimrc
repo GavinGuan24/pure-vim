@@ -267,7 +267,12 @@ let g:airline#extensions#tabline#close_symbol = nr2char(57869)
 
 "************************LeaderF
 " 搜索文件
-nmap <C-p> :Leaderf file<CR>
+"	按名称搜索
+nmap <Leader>o :Leaderf --nameOnly file<CR>
+"	全路径模糊搜索
+nmap <Leader>p :Leaderf file<CR>
+"	搜索方法名
+nmap <Leader>i :Leaderf function<CR>
 
 
 "************************ctrlsf.vim
