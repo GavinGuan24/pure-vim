@@ -146,6 +146,10 @@ Plug 'vim-airline/vim-airline'
 "   只是rangta配合airline显示当前的git分支状态
 Plug 'tpope/vim-fugitive'
 
+"LeaderF
+"	This plugin is mainly used for locating files, buffers, mrus, tags in large project.
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+
 "CtrlSF 
 "   全局文件片段搜索器, 配合ag使用
 Plug 'dyng/ctrlsf.vim'
@@ -260,6 +264,10 @@ let g:airline_symbols.linenr = ''
 let g:airline#extensions#tabline#left_sep = ''
 let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#close_symbol = nr2char(57869)
+
+"************************LeaderF
+" 搜索文件
+nmap <C-p> :Leaderf file<CR>
 
 
 "************************ctrlsf.vim

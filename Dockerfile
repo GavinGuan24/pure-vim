@@ -9,10 +9,11 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 	&& echo -e '# self-defined\n' >> /etc/profile \
 	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
 	&& echo -e '\n' >> /etc/profile \
+	&& apk --no-cache add vim \
 #	alpine 非常精简, 这里加几个常用的工具
 	&& apk add --no-cache bash git curl tzdata openssh \
-#	vim 插件中依赖的外部命令行工具
-	&& apk add --no-cache the_silver_searcher ctags \
+#	vim 插件中依赖的外部命令行工具 或 所需依赖
+	&& apk add --no-cache the_silver_searcher ctags gcc python3-dev musl-dev \
 #	自行安装jdk8时, 需要 CA 证书验证工具
 #	&& apk add --no-cache ca-certificates \
 #	给自定义的脚本 755 权限
