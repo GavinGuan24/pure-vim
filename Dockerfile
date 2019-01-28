@@ -44,7 +44,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 	&& wget http://mirrors.shu.edu.cn/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz \
 	&& tar -zxf apache-maven-3.6.0-bin.tar.gz && mv apache-maven-3.6.0 /usr/local/maven \
 	&& rm -rf apache-maven-3.6.0-bin.tar.gz \
-	&& echo -e 'export MAVEN_HOME=/usr/local/maven\nexport PATH=$PATH:$MAVEN_HOME/bin\n' \
+	&& echo -e 'export MAVEN_HOME=/usr/local/maven\nexport PATH=$PATH:$MAVEN_HOME/bin\n' >> /etc/profile \
 	&& echo "Finished. J-vim."
 CMD /usr/sbin/sshd -D
 
