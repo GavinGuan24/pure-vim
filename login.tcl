@@ -7,11 +7,11 @@
 
 # window
 
-trap {
- set rows [stty rows]
- set cols [stty columns]
- stty rows $rows columns $cols < $spawn_out(slave,name)
-} WINCH
+#trap {
+# set rows [stty rows]
+# set cols [stty columns]
+# stty rows $rows columns $cols < $spawn_out(slave,name)
+#} WINCH
 
 # args
 
