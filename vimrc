@@ -351,8 +351,22 @@ let g:snipMate.description_in_completion = 1
 
 
 "************************ ale
-" 总是显示语法报错标记栏
-" let g:ale_sign_column_always = 1
-" 使用 javac 对java 进行语法检测时, 使用的javac 命令所在路径
-let g:ale_java_javac_executable = 'javac'
-
+" 总是显示语法报错标记栏, 禁用
+let g:ale_sign_column_always = 0
+" 图标
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = nr2char(61553)
+" air line 支持
+let g:airline#extensions#ale#enabled = 0
+" 只调用指定的 linter 
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+\   'java': ['javac'],
+\}
+" 禁用自动检测
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_save = 0
+" 手动调用语法检测
+nmap <Leader>l :ALEEnable<CR>:ALELint<CR>
+nmap <Leader>,l :ALEDisable<CR>
