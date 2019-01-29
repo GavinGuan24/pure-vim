@@ -266,6 +266,16 @@ let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#close_symbol = nr2char(57869)
 
 "************************LeaderF
+let g:Lf_PreviewResult = {
+            \ 'File': 0,
+            \ 'Buffer': 0,
+            \ 'Mru': 0,
+            \ 'Tag': 0,
+            \ 'BufTag': 1,
+            \ 'Function': 0,
+            \ 'Line': 0,
+            \ 'Colorscheme': 0
+            \}
 let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 " 搜索文件
 "	按名称搜索
