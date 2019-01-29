@@ -266,12 +266,15 @@ let g:airline#extensions#tabline#left_alt_sep = ''
 let g:airline#extensions#tabline#close_symbol = nr2char(57869)
 
 "************************LeaderF
+let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 " 搜索文件
 "	按名称搜索
 nmap <Leader>o :Leaderf --nameOnly file<CR>
-"	全路径模糊搜索
-nmap <Leader>p :Leaderf file<CR>
-"	搜索方法名
+"   按全路径模糊搜索
+let g:Lf_ShortcutF = '<Leader>p'
+"   按buffer名搜索
+let g:Lf_ShortcutB = '<Leader>b'
+"	按方法名搜索
 nmap <Leader>i :Leaderf function<CR>
 
 
