@@ -11,9 +11,21 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 	&& echo -e '\n' >> /etc/profile \
 	&& apk --no-cache add vim \
 #	alpine 非常精简, 这里加几个常用的工具
-	&& apk add --no-cache bash git curl tzdata openssh \
+	&& apk add --no-cache bash \
+	git \
+	curl \
+	tzdata \
+	openssh \
 #	vim 插件中依赖的外部命令行工具 或 所需依赖
-	&& apk add --no-cache the_silver_searcher ctags gcc python3 python3-dev musl-dev \
+	&& apk add --no-cache the_silver_searcher \
+	ctags \
+	cmake \
+	make \
+	gcc \
+	g++ \
+	python3 \
+	python3-dev \ 
+	musl-dev \
 #	自行安装jdk8时, 需要 CA 证书验证工具
 #	&& apk add --no-cache ca-certificates \
 #	给自定义的脚本 755 权限
@@ -53,3 +65,6 @@ CMD /usr/sbin/sshd -D
 # 自己构建的alpine-jdk8 有 400+MB, 于是使用docker仓库中别人配置好且清除了不必要文件的alpine-jdk8镜像.
 # 之所以加入了 bash, openssh, 是因为 docker exec 进入容器时, 一些环境总是很奇怪, 所以放弃这种方式.
 # 总之, 现在配置环境都在 /etc/profile 写, 然后 docker restart 容器即可.
+
+# ale 似乎可以被 YCM(YouCompleteMe) 代替, YCM 正在尝试整合java开发相关的内容, 可惜的是现在这些功能都是实验性的.
+# YCM 背后有同一作者编写的 ycmd 项目支持, 而这个项目依赖了 jdt.ls.

@@ -180,7 +180,10 @@ Plug 'garbas/vim-snipmate'
 Plug 'honza/vim-snippets'
 "ale
 "   语法检测框架, 实际的校验器, 需要自己配置到系统, 例: javac
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
+
+"尝试补全插件
+Plug 'valloric/youcompleteme'
 
 "devicons
 "   vim 图标插件, 支持多个vim插件, 如:NERDTree. 该插件
@@ -356,8 +359,6 @@ let g:ale_sign_column_always = 0
 " 图标
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = nr2char(61553)
-" air line 支持
-let g:airline#extensions#ale#enabled = 0
 " 只调用指定的 linter 
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
@@ -370,3 +371,7 @@ let g:ale_lint_on_save = 0
 " 手动调用语法检测
 nmap <Leader>l :ALEEnable<CR>:ALELint<CR>
 nmap <Leader>,l :ALEDisable<CR>
+
+
+"************************ java补全插件
+
