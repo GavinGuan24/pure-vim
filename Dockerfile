@@ -31,7 +31,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 #	&& apk add --no-cache ca-certificates \
 #	给自定义的脚本 755 权限
 	&& chmod 755 /usr/local/bin/* \
-	&& chmod 755 /root/aide_youcompleteme.sh
+	&& chmod 755 /root/aide_youcompleteme.sh \
 #	安装 vim-plug
 	&& curl -fLo /root/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
