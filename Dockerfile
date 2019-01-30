@@ -3,6 +3,7 @@ FROM anapsix/alpine-java:8_jdk
 
 COPY ./usr_local_bin/ /usr/local/bin
 COPY ./vimrc /root/.vimrc
+COPY ./aide_youcompleteme.sh /root/aide_youcompleteme.sh
 #COPY ./jdk1.8.0_202 /usr/local/jdk
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
@@ -30,6 +31,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositorie
 #	&& apk add --no-cache ca-certificates \
 #	给自定义的脚本 755 权限
 	&& chmod 755 /usr/local/bin/* \
+	&& chmod 755 /root/aide_youcompleteme.sh
 #	安装 vim-plug
 	&& curl -fLo /root/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
