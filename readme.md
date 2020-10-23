@@ -248,7 +248,7 @@ iTerm2 -> Preferences -> Profiles -> Text -> Font -> Use a different font for no
 字体怎么来的 ? 上面的贴子写的很清楚, 你要安装在自己的电脑上, 我的是 Mac, 使用 homebrew 安装即可
 
 ```sh
-brew tap caskroom/fonts
+brew tap homebrew/cask-fonts
 brew cask install font-hack-nerd-font
 ```
 
