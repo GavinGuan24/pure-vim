@@ -8,7 +8,7 @@ COPY ./aide_youcompleteme.sh /root/aide_youcompleteme.sh
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
 	&& echo -e '# self-defined\n' >> /etc/profile \
-	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
+	&& echo 'export PS1="\[\e[35m\]\u\[\e[30m\]@\[\e[32m\]\h \[\e[36m\]\w\[\e[31m\] \$ \[\e[0m\]"' >> /etc/profile \
 	&& echo -e '\n' >> /etc/profile \
 	&& apk --no-cache add vim \
 #	alpine 非常精简, 这里加几个常用的工具
